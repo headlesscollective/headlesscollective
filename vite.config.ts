@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  base: '/headlesscollective/',
   server: {
     watch: {
       // Scratch dirs and build output are not part of the source graph.
