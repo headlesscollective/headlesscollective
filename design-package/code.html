@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" dir="ltr" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Headless Collective — Independent · Open · Collaborative</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=Sora:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#02040A',
+            void: '#050713',
+            cosmic: '#101B35',
+            stellar: '#356DDB',
+            starblue: '#8CB8FF',
+            cream: '#F0EEE8',
+            lavender: '#8B83C9',
+            glass: 'rgba(7, 12, 28, 0.65)'
+          },
+          fontFamily: {
+            sans: ['"Space Grotesk"', 'Sora', 'sans-serif'],
+            arabic: ['"IBM Plex Sans Arabic"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'glow-stellar': '0 0 35px -5px rgba(53, 109, 219, 0.35)',
+            'glow-cyan': '0 0 25px -4px rgba(140, 184, 255, 0.4)',
+            'glass-edge': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Glass & Particle Styles -->
+<style data-purpose="glassmorphism-and-effects">
+    .glass-panel {
+      background: linear-gradient(135deg, rgba(16, 27, 53, 0.4) 0%, rgba(5, 7, 19, 0.65) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(140, 184, 255, 0.14);
+    }
+    .glass-panel:hover {
+      border-color: rgba(140, 184, 255, 0.32);
+    }
+    .glass-nav {
+      background: rgba(3, 4, 10, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(140, 184, 255, 0.18);
+    }
+    .text-glow {
+      text-shadow: 0 0 24px rgba(140, 184, 255, 0.35);
+    }
+    .btn-sweep {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-sweep::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transform: rotate(30deg) translateX(-100%);
+      transition: transform 0.75s ease;
+    }
+    .btn-sweep:hover::after {
+      transform: rotate(30deg) translateX(100%);
+    }
+    [dir="rtl"] {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+    [dir="rtl"] .font-mono {
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Arabic', monospace;
+    }
+    /* Constellation connecting pulse */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; stroke-width: 1.2; }
+      50% { opacity: 0.85; stroke-width: 2; }
+    }
+    .constellation-line {
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+  </style>
+<!-- END: Custom Glass & Particle Styles -->
+</head>
+<body class="bg-obsidian text-cream antialiased selection:bg-stellar selection:text-white overflow-x-hidden">
+<!-- Scroll Progress Bar -->
+<div class="fixed top-0 left-0 right-0 h-[2px] bg-white/5 z-50 pointer-events-none">
+<div class="h-full bg-gradient-to-r from-stellar via-starblue to-lavender w-0 transition-all duration-150" id="scrollProgressBar"></div>
+</div>
+<!-- BEGIN: Navigation -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 py-3 sm:py-4 pointer-events-none">
+<nav aria-label="Main Navigation" class="glass-nav pointer-events-auto rounded-2xl sm:rounded-full px-4 sm:px-6 py-2.5 h-14 flex items-center justify-between w-full max-w-6xl shadow-2xl transition-all duration-300 border border-starblue/20">
+<!-- Brand Logo & Identity -->
+<a class="flex flex-row items-center whitespace-nowrap gap-2.5 group" href="#home">
+<div class="w-8 h-8 rounded-lg overflow-hidden p-0.5 border border-starblue/30 group-hover:border-starblue transition-colors bg-black/60 flex items-center justify-center flex-shrink-0">
+<img alt="Headless Collective Emblem" class="w-full h-full object-cover rounded-md" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDWil8fsfhhYsGJGsa6U1KHmS2U-oInPGf_zCqj6gLamIPrkPIz9k4qcgk459QymYPu2tgPNzsD16fBB-qjs9QtGAdWzB8rfOLuR4auIYwpXHimA9juN7laLi3-1-JFsZjm6hz24bRYTPfY_pH5wJTG1Y0Gj5O5y58locFXxoJJOYka-tCeLKlNvUqpmDoi8u5OFHKCtqKeBUh6XbSsofAUqjR3shWHzhJooNRms7YAtW5rk77hCg"/>
+</div>
+<div class="flex flex-row items-center gap-1.5 whitespace-nowrap leading-none">
+<span class="font-bold tracking-tight text-sm sm:text-base text-[#F0EEE8] uppercase group-hover:text-starblue transition-colors font-mono">HEADLESS</span>
+<span class="font-semibold text-[10px] sm:text-xs text-[#8CB8FF]/90 uppercase tracking-widest font-mono">COLLECTIVE</span>
+</div>
+</a>
+<!-- Desktop Nav Links with section indicators -->
+<div class="hidden lg:flex items-center gap-5 text-xs uppercase tracking-wider text-gray-300 font-medium">
+<a class="hover:text-starblue transition-colors py-1 relative flex items-center gap-1" data-ar="الفلسفة" data-en="Philosophy" href="#philosophy">
+<span class="text-[10px] font-mono text-starblue/70">01</span><span>Philosophy</span>
+</a>
+<a class="hover:text-starblue transition-colors py-1 relative flex items-center gap-1" data-ar="المبادئ" data-en="Principles" href="#principles">
+<span class="text-[10px] font-mono text-starblue/70">02</span><span>Principles</span>
+</a>
+<a class="hover:text-starblue transition-colors py-1 relative flex items-center gap-1" data-ar="المجالات" data-en="Fields" href="#fields">
+<span class="text-[10px] font-mono text-starblue/70">03</span><span>Fields</span>
+</a>
+<a class="hover:text-starblue transition-colors py-1 relative flex items-center gap-1" data-ar="آلية العمل" data-en="How We Work" href="#how-we-work">
+<span class="text-[10px] font-mono text-starblue/70">04</span><span>How We Work</span>
+</a>
+<a class="hover:text-starblue transition-colors py-1 relative flex items-center gap-1" data-ar="المشاريع" data-en="Projects" href="#projects">
+<span class="text-[10px] font-mono text-starblue/70">05</span><span>Projects</span>
+</a>
+<a class="hover:text-starblue transition-colors py-1 relative flex items-center gap-1" data-ar="المشاركة" data-en="Participate" href="#participate">
+<span class="text-[10px] font-mono text-starblue/70">06</span><span>Participate</span>
+</a>
+</div>
+<!-- Action Items & Language Switcher -->
+<div class="flex items-center gap-2.5">
+<!-- Language Switcher Toggle -->
+<button class="px-2.5 py-1 text-xs font-mono rounded-full border border-starblue/30 hover:border-starblue bg-white/5 hover:bg-white/10 transition-all text-starblue font-semibold flex items-center gap-1" id="langToggleBtn" onclick="toggleLanguage()" title="Switch Language">
+<span class="" id="langIndicator">AR</span>
+<span class="text-[10px] text-gray-400">/ EN</span>
+</button>
+<a class="hidden sm:inline-flex items-center gap-1.5 text-xs px-3.5 py-1.5 rounded-full bg-stellar/20 text-starblue border border-stellar/40 hover:bg-stellar hover:text-white transition-all duration-300 font-medium font-mono" href="https://github.com/HeadLess-Collective" rel="noopener noreferrer" target="_blank">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill-rule="evenodd"></path></svg>
+<span>GitHub</span>
+</a>
+<!-- Mobile Menu Toggle Button -->
+<button class="lg:hidden p-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 border border-white/10 transition-colors" onclick="const m=document.getElementById('mobileNavMenu'); m.classList.toggle('hidden');" title="Toggle Menu">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</nav>
+<div class="hidden fixed top-20 left-4 right-4 z-50 glass-nav rounded-2xl p-6 border border-starblue/20 shadow-2xl max-w-md mx-auto pointer-events-auto lg:hidden flex flex-col gap-4 text-center" id="mobileNavMenu">
+<div class="flex flex-col gap-3 text-sm uppercase tracking-wider text-gray-200 font-medium">
+<a class="hover:text-starblue py-2 border-b border-white/5 transition-colors" data-ar="الفلسفة" data-en="Philosophy" href="#philosophy" onclick="document.getElementById('mobileNavMenu').classList.add('hidden')">01 Philosophy</a>
+<a class="hover:text-starblue py-2 border-b border-white/5 transition-colors" data-ar="المبادئ" data-en="Principles" href="#principles" onclick="document.getElementById('mobileNavMenu').classList.add('hidden')">02 Principles</a>
+<a class="hover:text-starblue py-2 border-b border-white/5 transition-colors" data-ar="المجالات" data-en="Fields" href="#fields" onclick="document.getElementById('mobileNavMenu').classList.add('hidden')">03 Fields</a>
+<a class="hover:text-starblue py-2 border-b border-white/5 transition-colors" data-ar="آلية العمل" data-en="How We Work" href="#how-we-work" onclick="document.getElementById('mobileNavMenu').classList.add('hidden')">04 How We Work</a>
+<a class="hover:text-starblue py-2 border-b border-white/5 transition-colors" data-ar="المشاريع" data-en="Projects" href="#projects" onclick="document.getElementById('mobileNavMenu').classList.add('hidden')">05 Projects</a>
+<a class="hover:text-starblue py-2 transition-colors" data-ar="المشاركة" data-en="Participate" href="#participate" onclick="document.getElementById('mobileNavMenu').classList.add('hidden')">06 Participate</a>
+</div>
+<div class="pt-2 border-t border-white/10">
+<a class="w-full py-2.5 rounded-full bg-stellar/20 text-starblue border border-stellar/40 hover:bg-stellar hover:text-white transition-all font-mono text-xs flex items-center justify-center gap-2" href="https://github.com/HeadLess-Collective" target="_blank">
+<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill-rule="evenodd"></path></svg>
+<span>GitHub Organization</span>
+</a>
+</div>
+</div>
+</header>
+<!-- END: Navigation -->
+<!-- BEGIN: HeroSection -->
+<section class="relative min-h-screen flex flex-col justify-between pt-32 pb-14 px-6 overflow-hidden" id="home">
+<!-- Orbital Cosmic Background Image Backdrop -->
+<div class="absolute inset-0 z-0 pointer-events-none">
+<img alt="Cinematic Deep Space Orbit" class="w-full h-full object-cover object-bottom opacity-75" src="https://lh3.googleusercontent.com/aida/AEtjO1WIf99gKoc6X6eQxW9XN2M95Cusy5-VWjDlLjVwRsM5BHVVE285o47kROzY9wamD4bu_sc2WtL_NfPDAvyPzJYEkRmX7PCY7xx8AwY_1ylhe0UPSoW3WyX_YyUeMJ4NzPgO2zOe3I3EGg2bXjFl__niAWNnTE6XpOKWwQpr2sJaBsjpPPzEbxUBqMOmj1Qdx2idCOUJ6lqNlHpeDbfxls4MOCTPQ9EHR3TjsQ4xiQ"/>
+<div class="absolute inset-0 bg-gradient-to-b from-obsidian/95 via-transparent to-obsidian"></div>
+</div>
+<!-- Hero Content Container -->
+<div class="relative z-10 max-w-5xl mx-auto w-full text-center my-auto pt-8">
+<!-- Primary Unified Brand Heading / Wordmark -->
+<div class="mb-5 relative">
+<h1 class="flex flex-col items-center justify-center text-center uppercase tracking-tight drop-shadow-md select-none" style="gap: 0.15rem;">
+<span class="font-extrabold text-[#F0EEE8] tracking-tight leading-none" style="font-size: clamp(3.8rem, 8.5vw, 6.8rem); font-family: 'Space Grotesk', Sora, sans-serif;">HEADLESS</span>
+<span class="font-semibold leading-none tracking-wider text-[#8CB8FF] drop-shadow-md" style="font-size: clamp(1.9rem, 4.25vw, 3.4rem); letter-spacing: 0.08em; font-family: 'Space Grotesk', Sora, sans-serif;">COLLECTIVE</span>
+</h1>
+</div>
+<!-- Positioning Badge -->
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-starblue/30 bg-cosmic/50 backdrop-blur-md mb-6 shadow-glow-stellar">
+<span class="w-1.5 h-1.5 rounded-full bg-starblue animate-pulse"></span>
+<span class="text-[11px] font-mono tracking-widest text-starblue uppercase font-medium" data-ar="مستقل · مفتوح · تعاوني" data-en="INDEPENDENT · OPEN · COLLABORATIVE">INDEPENDENT · OPEN · COLLABORATIVE</span>
+</div>
+<!-- Tagline -->
+<p class="text-xl sm:text-2xl md:text-3xl text-cream font-light max-w-3xl mx-auto leading-relaxed mb-4" data-ar="المعرفة مُشاعة. والبناء للجميع." data-en="Knowledge is shared. Building is for everyone.">
+    Knowledge is shared. Building is for everyone.
+  </p>
+<!-- Description -->
+<p class="text-sm sm:text-base md:text-lg text-gray-300/90 max-w-2xl mx-auto leading-relaxed font-light mb-8" data-ar="مجتمع تقني مستقل يتمحور حول الفضول، والتعاون، والتعلم المستمر، وحرية استكشاف الأفكار خارج الأطر التقليدية." data-en="An independent technology community built around curiosity, collaboration, continuous learning, and the freedom to explore ideas beyond conventional boundaries.">
+    An independent technology community built around curiosity, collaboration, continuous learning, and the freedom to explore ideas beyond conventional boundaries.
+  </p>
+<!-- Visitor Signposting: 3 Core Questions Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl mx-auto mb-8 text-left">
+<a class="glass-panel p-3.5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group" href="#philosophy">
+<div class="text-[10px] font-mono text-starblue mb-1 flex items-center justify-between">
+<span data-ar="السؤال الأول" data-en="QUESTION 01">QUESTION 01</span>
+<span class="group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+</div>
+<div class="text-xs font-bold text-white mb-0.5" data-ar="ما هو هيدلس كوليكتف؟" data-en="What is Headless Collective?">What is Headless Collective?</div>
+<div class="text-[11px] text-gray-400 font-light" data-ar="مجتمع تقني مستقل لا مركزي يحرر المعرفة." data-en="A decentralized tech collective driven by open code.">A decentralized tech collective driven by open code.</div>
+</a>
+<a class="glass-panel p-3.5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group" href="#principles">
+<div class="text-[10px] font-mono text-starblue mb-1 flex items-center justify-between">
+<span data-ar="السؤال الثاني" data-en="QUESTION 02">QUESTION 02</span>
+<span class="group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+</div>
+<div class="text-xs font-bold text-white mb-0.5" data-ar="ما الذي يميزنا؟" data-en="What makes it different?">What makes it different?</div>
+<div class="text-[11px] text-gray-400 font-light" data-ar="عقول متعددة، لا احتكار للمعلومة، ومبادئ واضحة." data-en="Many minds over single heads. Open by default.">Many minds over single heads. Open by default.</div>
+</a>
+<a class="glass-panel p-3.5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group" href="#participate">
+<div class="text-[10px] font-mono text-starblue mb-1 flex items-center justify-between">
+<span data-ar="السؤال الثالث" data-en="QUESTION 03">QUESTION 03</span>
+<span class="group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+</div>
+<div class="text-xs font-bold text-white mb-0.5" data-ar="كيف يمكنني المشاركة؟" data-en="How can I participate?">How can I participate?</div>
+<div class="text-[11px] text-gray-400 font-light" data-ar="7 مسارات مفتوحة لأي شغوف دون ألقاب أو إذن." data-en="7 open tracks for any builder without gatekeepers.">7 open tracks for any builder without gatekeepers.</div>
+</a>
+</div>
+<!-- CTAs -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<a class="btn-sweep w-full sm:w-auto px-8 py-3.5 rounded-full bg-stellar text-white font-medium text-sm tracking-wide shadow-glow-stellar hover:bg-stellar/90 transition-all flex items-center justify-center gap-2" data-ar="اكتشف فلسفتنا" data-en="Discover Our Philosophy" href="#philosophy">
+<span>Discover Our Philosophy</span>
+<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a class="w-full sm:w-auto px-8 py-3.5 rounded-full glass-panel hover:bg-white/10 text-starblue font-medium text-sm tracking-wide transition-all border border-starblue/30 flex items-center justify-center gap-2" data-ar="استكشف يوميات سابر [001]" data-en="Explore Cyber Diaries [001]" href="#projects">
+<span>Explore Cyber Diaries [001]</span>
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+</a>
+</div>
+</div>
+<!-- Bottom Indicator Badges -->
+<div class="relative z-10 max-w-4xl mx-auto w-full pt-8 flex flex-wrap items-center justify-between text-xs text-gray-400 font-mono border-t border-white/10">
+<div class="flex items-center gap-2">
+<span class="text-starblue">◆</span>
+<span class="" data-ar="متعدد التخصصات بطبيعته" data-en="Cross-disciplinary by nature">Cross-disciplinary by nature</span>
+</div>
+<div class="flex items-center gap-2 mt-2 sm:mt-0">
+<span class="text-starblue">◆</span>
+<span class="" data-ar="مفتوح للعقول الشغوفة" data-en="Open to curious minds">Open to curious minds</span>
+</div>
+<div class="flex items-center gap-2 mt-2 sm:mt-0 text-gray-500">
+<span class="">EST. 2025</span>
+</div>
+</div>
+</section>
+<!-- END: HeroSection -->
+<!-- BEGIN: Section 01 - Philosophy -->
+<section class="py-24 px-6 border-t border-white/5 relative bg-gradient-to-b from-obsidian via-void to-obsidian" id="philosophy">
+<div class="max-w-6xl mx-auto">
+<!-- Section Header -->
+<div class="mb-14">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stellar/15 border border-starblue/25 text-xs font-mono text-starblue tracking-widest uppercase mb-3">
+<span>01 // WHO WE ARE</span>
+</div>
+<h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight" data-ar="مساحة حرة لتحويل الأفكار إلى واقع." data-en="An open space for ideas to become real.">
+      An open space for ideas to become real.
+    </h2>
+<p class="text-gray-400 mt-2 font-light text-base max-w-2xl" data-ar="فلسفة هيدلس كوليكتف تقوم على تفكيك المركزية وبناء المعرفة الجماعية دون قيود." data-en="Our philosophy: decoupling insight from authority, empowering many minds over centralized control.">
+      Our philosophy: decoupling insight from authority, empowering many minds over centralized control.
+    </p>
+</div>
+<!-- Editorial Pillars Strip (5 Pillars) -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-12">
+<div class="p-3.5 rounded-xl glass-panel border border-white/10 hover:border-starblue/40 transition-all">
+<span class="text-[10px] font-mono text-starblue block mb-1">PILLAR 01</span>
+<h4 class="text-xs sm:text-sm font-semibold text-white mb-1" data-ar="التفكير المستقل" data-en="Independent Thinking">Independent Thinking</h4>
+<p class="text-[11px] text-gray-400 font-light" data-ar="حرية السؤال خارج الأنماط السائدة." data-en="Freedom to explore outside rigid dogmas.">Freedom to explore outside rigid dogmas.</p>
+</div>
+<div class="p-3.5 rounded-xl glass-panel border border-white/10 hover:border-starblue/40 transition-all">
+<span class="text-[10px] font-mono text-starblue block mb-1">PILLAR 02</span>
+<h4 class="text-xs sm:text-sm font-semibold text-white mb-1" data-ar="المعرفة المُشاعة" data-en="Shared Knowledge">Shared Knowledge</h4>
+<p class="text-[11px] text-gray-400 font-light" data-ar="لا احتكار للأفكار والحلول البرمجية." data-en="No proprietary silos or gated insights.">No proprietary silos or gated insights.</p>
+</div>
+<div class="p-3.5 rounded-xl glass-panel border border-white/10 hover:border-starblue/40 transition-all">
+<span class="text-[10px] font-mono text-starblue block mb-1">PILLAR 03</span>
+<h4 class="text-xs sm:text-sm font-semibold text-white mb-1" data-ar="الذكاء الجمعي" data-en="Collective Intelligence">Collective Intelligence</h4>
+<p class="text-[11px] text-gray-400 font-light" data-ar="قوة الإنجاز تنبع من تكامل التخصصات." data-en="Networked cognition solves complex feats.">Networked cognition solves complex feats.</p>
+</div>
+<div class="p-3.5 rounded-xl glass-panel border border-white/10 hover:border-starblue/40 transition-all">
+<span class="text-[10px] font-mono text-starblue block mb-1">PILLAR 04</span>
+<h4 class="text-xs sm:text-sm font-semibold text-white mb-1" data-ar="التعاون المفتوح" data-en="Open Collaboration">Open Collaboration</h4>
+<p class="text-[11px] text-gray-400 font-light" data-ar="الجميع شريك في البناء والتطوير." data-en="Anyone can propose, iterate, and build.">Anyone can propose, iterate, and build.</p>
+</div>
+<div class="p-3.5 rounded-xl glass-panel border border-starblue/30 bg-stellar/10 hover:border-starblue transition-all col-span-2 md:col-span-1">
+<span class="text-[10px] font-mono text-starblue block mb-1">PILLAR 05</span>
+<h4 class="text-xs sm:text-sm font-semibold text-white mb-1" data-ar="تنظيم بلا احتكار" data-en="Structure Without Monopoly">Structure Without Monopoly</h4>
+<p class="text-[11px] text-gray-300 font-light" data-ar="نظام ديناميكي يرفض التمركز الأحادي." data-en="Coordination without hierarchical bottlenecks.">Coordination without hierarchical bottlenecks.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left: Narrative Statement & Collective Thesis -->
+<div class="lg:col-span-6 space-y-6">
+<p class="text-gray-300 text-lg leading-relaxed font-light" data-ar="في هيدلس كوليكتف، لا تعني عبارة 'Headless' الغياب أو النقص، بل هي قرار واعٍ برفض المركزية. نرفض حصر الرؤية في شخص واحد أو هيكل هرمي احتكاري." data-en="At Headless Collective, 'Headless' is neither absence nor deficit. It is our deliberate choice to reject centralization. We do not place our vision inside a single gatekeeper or a monolithic command structure.">
+        At Headless Collective, 'Headless' is neither absence nor deficit. It is our deliberate choice to reject centralization. We do not place our vision inside a single gatekeeper or a monolithic command structure.
+      </p>
+<p class="text-gray-400 leading-relaxed font-light text-sm sm:text-base" data-ar="نؤمن بأن الابتكار يزدهر عندما تُفصل القيادة عن احتكار المعرفة، وحين يجتمع المهندسون والباحثون والمبدعون حول الشغف بدلاً من البيروقراطية." data-en="We believe innovation flourishes best when authority is decoupled from insight. When engineers, researchers, creatives, and analysts congregate around curiosity rather than bureaucratic hierarchies.">
+        We believe innovation flourishes best when authority is decoupled from insight. When engineers, researchers, creatives, and analysts congregate around curiosity rather than bureaucratic hierarchies.
+      </p>
+<!-- Prominent Collective Thesis Quote -->
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-l-starblue shadow-glow-stellar mt-6 relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-stellar/10 rounded-full blur-xl pointer-events-none"></div>
+<p class="text-white text-xl sm:text-2xl font-bold tracking-tight" data-ar="“لا نبني حول رأس واحد. نحن نبني من خلال عقول متعددة.”" data-en="“We don't build around one head. We build through many minds.”">
+          “We don't build around one head. We build through many minds.”
+        </p>
+<div class="flex items-center justify-between mt-4">
+<span class="text-xs font-mono text-starblue tracking-wider uppercase">— THE HEADLESS COLLECTIVE THESIS</span>
+<span class="text-[11px] font-mono text-gray-400">FOUNDATIONAL PRINCIPLE</span>
+</div>
+</div>
+<div class="text-sm text-gray-400 font-light border-l border-white/10 pl-4 py-1 italic" data-ar="“نحن لا نرفض التنظيم، بل نرفض تحول التنظيم إلى احتكار.”" data-en="“We do not reject structure. We reject the transformation of structure into monopoly.”">
+        “We do not reject structure. We reject the transformation of structure into monopoly.”
+      </div>
+</div>
+<!-- Right: Tactile Architectural Comparison (Many Minds vs Single Head) -->
+<div class="lg:col-span-6 space-y-4">
+<div class="glass-panel rounded-2xl p-6 sm:p-7 border border-starblue/30 shadow-2xl">
+<div class="text-xs font-mono text-gray-400 uppercase tracking-wider mb-5 flex items-center justify-between">
+<span class="flex items-center gap-2 text-white font-semibold" data-ar="المقارنة الهيكلية التفاعلية" data-en="Interactive Architectural Comparison">
+<span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            Architectural Comparison
+          </span>
+<span class="text-starblue text-xs font-mono px-2 py-0.5 rounded bg-stellar/20 border border-starblue/30">PARADIGM SHIFT</span>
+</div>
+<!-- Comparative Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Many Minds Card (Our Model) -->
+<div class="p-5 rounded-xl bg-stellar/15 border-2 border-starblue/60 relative shadow-glow-stellar transition-all hover:border-cyan-400">
+<div class="w-2.5 h-2.5 rounded-full bg-cyan-400 absolute top-4 right-4 animate-ping"></div>
+<div class="text-cyan-300 font-mono text-[11px] mb-1 font-bold tracking-wider">OUR PARADIGM</div>
+<div class="text-white text-base font-bold mb-3" data-ar="شبكة موزعة (Many Minds)" data-en="Distributed Network (Many Minds)">Distributed Network (Many Minds)</div>
+<ul class="text-xs text-gray-200 space-y-2.5 font-light">
+<li class="flex items-start gap-2">
+<span class="text-cyan-400 font-bold">✓</span>
+<span data-ar="صنع قرار لا مركزي ومستقل" data-en="Decoupled decision making">Decoupled decision making</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-cyan-400 font-bold">✓</span>
+<span data-ar="مبادرة ذاتية حرة دون قيود" data-en="Autonomous initiative taking">Autonomous initiative taking</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-cyan-400 font-bold">✓</span>
+<span data-ar="مرونة تشغيلية وبرمجيات مفتوحة" data-en="Redundant resilience &amp; shared code">Redundant resilience &amp; shared code</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-cyan-400 font-bold">✓</span>
+<span data-ar="الكفاءة والإنجاز فوق الألقاب" data-en="Merit &amp; execution over titles">Merit &amp; execution over titles</span>
+</li>
+</ul>
+</div>
+<!-- Single Head Card (Conventional Model) -->
+<div class="p-5 rounded-xl bg-black/50 border border-white/10 opacity-80 hover:opacity-100 transition-opacity">
+<div class="text-gray-500 font-mono text-[11px] mb-1 font-medium tracking-wider">CONVENTIONAL</div>
+<div class="text-gray-300 text-base font-semibold mb-3" data-ar="الرأس الأحادي (Single Head)" data-en="Single Headed (Monopoly)">Single Headed (Central Bottleneck)</div>
+<ul class="text-xs text-gray-400 space-y-2.5 font-light">
+<li class="flex items-start gap-2">
+<span class="text-rose-400/80">✕</span>
+<span data-ar="نقطة فشل إبداعية واحدة" data-en="Single point of creative failure">Single point of creative failure</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-rose-400/80">✕</span>
+<span data-ar="بطء الموافقات الهرمية والبيروقراطية" data-en="Hierarchical approval lag">Hierarchical approval lag</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-rose-400/80">✕</span>
+<span data-ar="احتكار وعزل المعرفة في صوامع" data-en="Knowledge silo retention">Knowledge silo retention</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-rose-400/80">✕</span>
+<span data-ar="توجيه أحادي وقرارات معزولة" data-en="Monopolized direction">Monopolized direction</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Visualization Strip -->
+<div class="mt-5 p-3.5 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between text-xs font-mono text-gray-300">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="" data-ar="حالة النظام: لامركزي بالكامل" data-en="System State: Fully Decentralized">System State: Fully Decentralized</span>
+</div>
+<span class="text-starblue font-semibold">100% OPEN SOURCE</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section 01 - Philosophy -->
+<!-- BEGIN: Section 02 - Principles -->
+<section class="py-24 px-6 relative bg-obsidian" id="principles">
+<div class="max-w-6xl mx-auto">
+<!-- Section Header -->
+<div class="mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stellar/15 border border-starblue/25 text-xs font-mono text-starblue tracking-widest uppercase mb-3">
+<span>02 // WHAT GUIDES US</span>
+</div>
+<h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight" data-ar="المبادئ قبل الألقاب." data-en="Principles before titles.">
+      Principles before titles.
+    </h2>
+<p class="text-gray-400 mt-2 font-light text-base max-w-xl" data-ar="ستة مبادئ أساسية تقود برمجياتنا، وتواصلنا، وخارطة طريقنا." data-en="Six non-negotiable tenets guiding our code, communication, and roadmap.">
+      Six non-negotiable tenets guiding our code, communication, and roadmap.
+    </p>
+</div>
+<!-- Principles Grid: 6 Refined Architectural Cards with distinct geometric icons -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- 01 Openness -->
+<div class="glass-panel p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-starblue/60 group relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono text-starblue tracking-wider font-semibold">01 // TRANSPARENCY</span>
+<div class="w-8 h-8 rounded-lg bg-stellar/20 border border-starblue/30 flex items-center justify-center text-starblue group-hover:scale-110 transition-transform">
+<!-- Geometric Box/Open Eye Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<h3 class="text-xl font-bold text-white mb-2" data-ar="الانفتاحية" data-en="Openness">Openness</h3>
+<p class="text-gray-400 text-sm font-light leading-relaxed" data-ar="الأصل هو المشاركة المفتوحة. ننشر المخططات، والمشاريع، والدراسات دون احتكار." data-en="Default to open. We share blueprints, codebases, post-mortems, and discoveries unconditionally.">
+        Default to open. We share blueprints, codebases, post-mortems, and discoveries unconditionally.
+      </p>
+</div>
+<!-- 02 Collaboration -->
+<div class="glass-panel p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-starblue/60 group relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono text-starblue tracking-wider font-semibold">02 // SYNERGY</span>
+<div class="w-8 h-8 rounded-lg bg-stellar/20 border border-starblue/30 flex items-center justify-center text-starblue group-hover:scale-110 transition-transform">
+<!-- Geometric Interlocking Node Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><circle cx="7" cy="12" r="3" stroke-width="2"></circle><circle cx="17" cy="12" r="3" stroke-width="2"></circle><path d="M10 12h4" stroke-width="2"></path></svg>
+</div>
+</div>
+<h3 class="text-xl font-bold text-white mb-2" data-ar="التعاون" data-en="Collaboration">Collaboration</h3>
+<p class="text-gray-400 text-sm font-light leading-relaxed" data-ar="لا يوجد تخصص يمتلك كل الحلول. التحديات المعقدة تتلاشى حين تلتقي العقول دون حواجز." data-en="No single discipline holds all answers. Complex challenges dissolve when minds assemble without walls.">
+        No single discipline holds all answers. Complex challenges dissolve when minds assemble without walls.
+      </p>
+</div>
+<!-- 03 Learning -->
+<div class="glass-panel p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-starblue/60 group relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono text-starblue tracking-wider font-semibold">03 // MASTERY</span>
+<div class="w-8 h-8 rounded-lg bg-stellar/20 border border-starblue/30 flex items-center justify-center text-starblue group-hover:scale-110 transition-transform">
+<!-- Geometric Spiral/Ascent Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<h3 class="text-xl font-bold text-white mb-2" data-ar="التعلم المستمر" data-en="Learning">Learning</h3>
+<p class="text-gray-400 text-sm font-light leading-relaxed" data-ar="كل معضلة هي منهج تعليمي. الفضول هو عملتنا الأساسية؛ نتعلم في العلن ونطور بإتقان." data-en="Every problem is a curriculum. Curiosity is our principal currency; we learn in public and refine deliberately.">
+        Every problem is a curriculum. Curiosity is our principal currency; we learn in public and refine deliberately.
+      </p>
+</div>
+<!-- 04 Autonomy -->
+<div class="glass-panel p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-starblue/60 group relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono text-starblue tracking-wider font-semibold">04 // FREEDOM</span>
+<div class="w-8 h-8 rounded-lg bg-stellar/20 border border-starblue/30 flex items-center justify-center text-starblue group-hover:scale-110 transition-transform">
+<!-- Compass / Orbit Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9" stroke-width="1.8"></polygon></svg>
+</div>
+</div>
+<h3 class="text-xl font-bold text-white mb-2" data-ar="الاستقلالية" data-en="Autonomy">Autonomy</h3>
+<p class="text-gray-400 text-sm font-light leading-relaxed" data-ar="تبدع العقول في أوج طاقتها عندما تتحرر من الإدارة الجزئية العقيمة والقيود المصطنعة." data-en="Minds create at peak capability when unencumbered by artificial micromanagement and territorial gates.">
+        Minds create at peak capability when unencumbered by artificial micromanagement and territorial gates.
+      </p>
+</div>
+<!-- 05 Experimentation -->
+<div class="glass-panel p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-starblue/60 group relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono text-starblue tracking-wider font-semibold">05 // PRACTICE</span>
+<div class="w-8 h-8 rounded-lg bg-stellar/20 border border-starblue/30 flex items-center justify-center text-starblue group-hover:scale-110 transition-transform">
+<!-- Flask / Lab Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 5H9L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<h3 class="text-xl font-bold text-white mb-2" data-ar="التجريب" data-en="Experimentation">Experimentation</h3>
+<p class="text-gray-400 text-sm font-light leading-relaxed" data-ar="النظرية دون تطبيق تظل ساكنة. نحن نبرمج، نختبر، نفكك، نعيد البناء، ونتحقق عملياً." data-en="Theory without execution is dormant. We deploy, probe, stress-test, break, rebuild, and validate.">
+        Theory without execution is dormant. We deploy, probe, stress-test, break, rebuild, and validate.
+      </p>
+</div>
+<!-- 06 Responsibility -->
+<div class="glass-panel p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-starblue/60 group relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono text-starblue tracking-wider font-semibold">06 // ETHICS</span>
+<div class="w-8 h-8 rounded-lg bg-stellar/20 border border-starblue/30 flex items-center justify-center text-starblue group-hover:scale-110 transition-transform">
+<!-- Shield / Security Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<h3 class="text-xl font-bold text-white mb-2" data-ar="المسؤولية" data-en="Responsibility">Responsibility</h3>
+<p class="text-gray-400 text-sm font-light leading-relaxed" data-ar="البرمجيات تؤثر في حياة الناس الفعلية. نلتزم بأعلى معايير الأخلاقيات الرقمية والأمان التقني." data-en="Power and software impact real lives. We uphold absolute digital ethics, security vigilance, and mutual respect.">
+        Power and software impact real lives. We uphold absolute digital ethics, security vigilance, and mutual respect.
+      </p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section 02 - Principles -->
+<!-- BEGIN: Section 03 - Fields of Exploration (Constellation Node Experience) -->
+<section class="py-24 px-6 border-t border-white/5 relative bg-gradient-to-b from-obsidian via-cosmic/30 to-obsidian" id="fields">
+<div class="max-w-6xl mx-auto">
+<!-- Section Header -->
+<div class="mb-12">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stellar/15 border border-starblue/25 text-xs font-mono text-starblue tracking-widest uppercase mb-3">
+<span>03 // WHAT WE EXPLORE</span>
+</div>
+<h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight" data-ar="لا مجال أوحد. لا حدود ثابتة." data-en="No single field. No fixed boundaries.">
+      No single field. No fixed boundaries.
+    </h2>
+<p class="text-gray-400 mt-2 font-light text-base" data-ar="استكشف شبكة مجالاتنا المترابطة كالنجوم؛ اختر أي مجال لمعاينة التوجهات والمنهجيات المعتمدة." data-en="Explore our interconnected constellation of domains. Select or hover any node to inspect methodology and trajectories.">
+      Explore our interconnected constellation of domains. Select or hover any node to inspect methodology and trajectories.
+    </p>
+</div>
+<!-- Interactive Constellation Grid + Visual Connector -->
+<div class="relative mb-6">
+<!-- SVG Constellation lines (decorative backdrop linking cards) -->
+<div class="absolute inset-0 pointer-events-none hidden md:block opacity-40">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 900 120">
+<line class="constellation-line" stroke="#8CB8FF" stroke-dasharray="3 3" x1="80" x2="230" y1="60" y2="60"></line>
+<line class="constellation-line" stroke="#8CB8FF" stroke-dasharray="3 3" x1="230" x2="380" y1="60" y2="60"></line>
+<line class="constellation-line" stroke="#8CB8FF" stroke-dasharray="3 3" x1="380" x2="530" y1="60" y2="60"></line>
+<line class="constellation-line" stroke="#8CB8FF" stroke-dasharray="3 3" x1="530" x2="680" y1="60" y2="60"></line>
+<line class="constellation-line" stroke="#8CB8FF" stroke-dasharray="3 3" x1="680" x2="820" y1="60" y2="60"></line>
+</svg>
+</div>
+<!-- 6 Interconnected Constellation Node Cards -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 relative z-10" id="fieldButtonsContainer">
+<button class="field-btn p-4 rounded-xl text-left border border-starblue/50 bg-stellar/25 text-white transition-all text-xs font-mono relative group focus:outline-none focus:ring-1 focus:ring-starblue" id="field-tab-0" onclick="selectField(0)">
+<span class="inline-block w-2 h-2 rounded-full bg-cyan-400 mb-2 group-hover:scale-125 transition-transform"></span>
+<span class="block text-starblue text-[11px] mb-1 font-semibold">NODE 01</span>
+<span class="font-bold text-sm block">Software &amp; Tools</span>
+</button>
+<button class="field-btn p-4 rounded-xl text-left border border-white/10 bg-white/5 text-gray-300 hover:border-starblue/30 transition-all text-xs font-mono relative group focus:outline-none focus:ring-1 focus:ring-starblue" id="field-tab-1" onclick="selectField(1)">
+<span class="inline-block w-2 h-2 rounded-full bg-gray-500 mb-2 group-hover:scale-125 transition-transform"></span>
+<span class="block text-gray-400 text-[11px] mb-1 font-semibold">NODE 02</span>
+<span class="font-bold text-sm block">Security &amp; Privacy</span>
+</button>
+<button class="field-btn p-4 rounded-xl text-left border border-white/10 bg-white/5 text-gray-300 hover:border-starblue/30 transition-all text-xs font-mono relative group focus:outline-none focus:ring-1 focus:ring-starblue" id="field-tab-2" onclick="selectField(2)">
+<span class="inline-block w-2 h-2 rounded-full bg-gray-500 mb-2 group-hover:scale-125 transition-transform"></span>
+<span class="block text-gray-400 text-[11px] mb-1 font-semibold">NODE 03</span>
+<span class="font-bold text-sm block">Systems &amp; Infra</span>
+</button>
+<button class="field-btn p-4 rounded-xl text-left border border-white/10 bg-white/5 text-gray-300 hover:border-starblue/30 transition-all text-xs font-mono relative group focus:outline-none focus:ring-1 focus:ring-starblue" id="field-tab-3" onclick="selectField(3)">
+<span class="inline-block w-2 h-2 rounded-full bg-gray-500 mb-2 group-hover:scale-125 transition-transform"></span>
+<span class="block text-gray-400 text-[11px] mb-1 font-semibold">NODE 04</span>
+<span class="font-bold text-sm block">AI &amp; Emerging Tech</span>
+</button>
+<button class="field-btn p-4 rounded-xl text-left border border-white/10 bg-white/5 text-gray-300 hover:border-starblue/30 transition-all text-xs font-mono relative group focus:outline-none focus:ring-1 focus:ring-starblue" id="field-tab-4" onclick="selectField(4)">
+<span class="inline-block w-2 h-2 rounded-full bg-gray-500 mb-2 group-hover:scale-125 transition-transform"></span>
+<span class="block text-gray-400 text-[11px] mb-1 font-semibold">NODE 05</span>
+<span class="font-bold text-sm block">Docs &amp; Education</span>
+</button>
+<button class="field-btn p-4 rounded-xl text-left border border-white/10 bg-white/5 text-gray-300 hover:border-starblue/30 transition-all text-xs font-mono relative group focus:outline-none focus:ring-1 focus:ring-starblue" id="field-tab-5" onclick="selectField(5)">
+<span class="inline-block w-2 h-2 rounded-full bg-gray-500 mb-2 group-hover:scale-125 transition-transform"></span>
+<span class="block text-gray-400 text-[11px] mb-1 font-semibold">NODE 06</span>
+<span class="font-bold text-sm block">Design &amp; UX</span>
+</button>
+</div>
+</div>
+<!-- Dynamic Spotlight Inspector Panel -->
+<div class="glass-panel p-8 sm:p-10 rounded-3xl border border-starblue/30 transition-all duration-300 shadow-2xl relative overflow-hidden" id="fieldDetailsPanel">
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-stellar/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5 mb-6">
+<div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+<span class="text-xs font-mono text-starblue font-semibold tracking-wider" id="fieldCode">DOMAIN 01 // CORE UTILITY</span>
+</div>
+<h3 class="text-2xl sm:text-3xl font-bold text-white mt-1.5" id="fieldTitle">Software &amp; Development Tools</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-3.5 py-1.5 rounded-full text-xs font-mono bg-stellar/20 text-starblue border border-starblue/30" id="fieldStatus">ACTIVE DEVELOPMENT</span>
+</div>
+</div>
+<p class="text-gray-300 text-base sm:text-lg leading-relaxed mb-8 font-light" id="fieldDescription">
+      Engineering pragmatic, developer-first tools, modular micro-frameworks, and intuitive CLI solutions that streamline workflows and dismantle vendor entrapment.
+    </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="p-4 rounded-xl bg-black/50 border border-white/10">
+<span class="text-[11px] font-mono text-starblue uppercase tracking-wider block mb-1">KEY FOCUS</span>
+<span class="text-sm text-white font-medium block" id="fieldFocus1">Modular Architecture &amp; Microservices</span>
+</div>
+<div class="p-4 rounded-xl bg-black/50 border border-white/10">
+<span class="text-[11px] font-mono text-starblue uppercase tracking-wider block mb-1">TECH STACK</span>
+<span class="text-sm text-white font-medium block" id="fieldFocus2">TypeScript, Go, Rust, ASP.NET Core</span>
+</div>
+<div class="p-4 rounded-xl bg-black/50 border border-white/10">
+<span class="text-[11px] font-mono text-starblue uppercase tracking-wider block mb-1">DELIVERABLES</span>
+<span class="text-sm text-white font-medium block" id="fieldFocus3">Open Source Utilities &amp; Libraries</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section 03 - Fields of Exploration -->
+<!-- BEGIN: Section 04 - How We Work -->
+<section class="py-24 px-6 relative bg-obsidian" id="how-we-work">
+<div class="max-w-6xl mx-auto">
+<!-- Section Header -->
+<div class="mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stellar/15 border border-starblue/25 text-xs font-mono text-starblue tracking-widest uppercase mb-3">
+<span>04 // HOW WE WORK</span>
+</div>
+<h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight" data-ar="من مجرد تساؤل إلى أثر ملموس." data-en="From a question to something useful.">
+      From a question to something useful.
+    </h2>
+<p class="text-gray-400 mt-2 font-light text-base" data-ar="مسار عمل دوري من 4 مراحل لتحويل الفضول الخالص إلى مشاريع تقنية نافعة دون بيروقراطية." data-en="A cyclical, 4-stage pipeline translating raw curiosity into tangible public artifacts without bureaucracy.">
+      A cyclical, 4-stage pipeline translating raw curiosity into tangible public artifacts without bureaucracy.
+    </p>
+</div>
+<!-- Connected Progress Line Container -->
+<div class="relative">
+<!-- Desktop Connecting Horizontal Guide Line -->
+<div class="hidden md:block absolute top-10 left-12 right-12 h-0.5 bg-gradient-to-r from-stellar via-starblue to-lavender opacity-30 pointer-events-none"></div>
+<!-- 4 Stages Timeline -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
+<!-- Stage 01 -->
+<div class="glass-panel p-6 rounded-2xl relative group hover:border-starblue transition-all cursor-pointer" onclick="showStageDetails(0)">
+<div class="w-10 h-10 rounded-xl bg-stellar/20 text-starblue font-mono font-bold flex items-center justify-center text-sm mb-4 border border-starblue/40 group-hover:scale-110 transition-transform">01</div>
+<h3 class="text-lg font-bold text-white mb-2" data-ar="التساؤل" data-en="QUESTION">QUESTION</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed mb-4" data-ar="يبدأ كل مشروع بسؤال حقيقي أو مشكلة غير محلولة. يستطيع أي شخص طرح التساؤل." data-en="Every initiative originates from a real problem or an unanswered curiosity. Anyone can initiate a question.">
+          Every initiative originates from a real problem or an unanswered curiosity. Anyone can initiate a question.
+        </p>
+<div class="pt-3 border-t border-white/10 text-[11px] font-mono text-starblue flex items-center justify-between">
+<span data-ar="صياغة التساؤل والبحث" data-en="Formulate &amp; Inquire">Formulate &amp; Inquire</span>
+<span class="text-gray-500">→</span>
+</div>
+</div>
+<!-- Stage 02 -->
+<div class="glass-panel p-6 rounded-2xl relative group hover:border-starblue transition-all cursor-pointer" onclick="showStageDetails(1)">
+<div class="w-10 h-10 rounded-xl bg-stellar/20 text-starblue font-mono font-bold flex items-center justify-center text-sm mb-4 border border-starblue/40 group-hover:scale-110 transition-transform">02</div>
+<h3 class="text-lg font-bold text-white mb-2" data-ar="التجريب" data-en="EXPERIMENT">EXPERIMENT</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed mb-4" data-ar="بناء نماذج إثبات مفهوم سريعة، واختبار الفرضيات في مختبرات معزولة للتأكد من الجدوى." data-en="Rapid proofs-of-concept, hypothesis stress tests, and isolated laboratories to validate practical feasibility.">
+          Rapid proofs-of-concept, hypothesis stress tests, and isolated laboratories to validate practical feasibility.
+        </p>
+<div class="pt-3 border-t border-white/10 text-[11px] font-mono text-starblue flex items-center justify-between">
+<span data-ar="النمذجة والاختبار" data-en="Sandbox &amp; Prototype">Sandbox &amp; Prototype</span>
+<span class="text-gray-500">→</span>
+</div>
+</div>
+<!-- Stage 03 -->
+<div class="glass-panel p-6 rounded-2xl relative group hover:border-starblue transition-all cursor-pointer" onclick="showStageDetails(2)">
+<div class="w-10 h-10 rounded-xl bg-stellar/20 text-starblue font-mono font-bold flex items-center justify-center text-sm mb-4 border border-starblue/40 group-hover:scale-110 transition-transform">03</div>
+<h3 class="text-lg font-bold text-white mb-2" data-ar="البناء" data-en="BUILD">BUILD</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed mb-4" data-ar="تطوير برمجي مستقل، معايير كود نظيفة، اختبارات شاملة، ومراجعة جماعية مستمرة." data-en="Decoupled development, clean code standards, comprehensive tests, and continuous peer-driven review.">
+          Decoupled development, clean code standards, comprehensive tests, and continuous peer-driven review.
+        </p>
+<div class="pt-3 border-t border-white/10 text-[11px] font-mono text-starblue flex items-center justify-between">
+<span data-ar="التطوير والتأمين" data-en="Engineer &amp; Harden">Engineer &amp; Harden</span>
+<span class="text-gray-500">→</span>
+</div>
+</div>
+<!-- Stage 04 -->
+<div class="glass-panel p-6 rounded-2xl relative group hover:border-starblue transition-all cursor-pointer" onclick="showStageDetails(3)">
+<div class="w-10 h-10 rounded-xl bg-stellar/20 text-starblue font-mono font-bold flex items-center justify-center text-sm mb-4 border border-starblue/40 group-hover:scale-110 transition-transform">04</div>
+<h3 class="text-lg font-bold text-white mb-2" data-ar="المشاركة" data-en="SHARE">SHARE</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed mb-4" data-ar="نشر المستودعات البرمجية، والمختبرات التفاعلية، والتوثيق الشامل باللغة العربية أولاً." data-en="Publish source repositories, interactive labs, comprehensive documentation, and Arabic-first educational guides.">
+          Publish source repositories, interactive labs, comprehensive documentation, and Arabic-first educational guides.
+        </p>
+<div class="pt-3 border-t border-white/10 text-[11px] font-mono text-starblue flex items-center justify-between">
+<span data-ar="النشر والتعليم المفتوح" data-en="Open Release &amp; Teach">Open Release &amp; Teach</span>
+<span class="text-gray-500">↺</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Stage Deep-Dive Bar: How Collaboration Flows Without Hierarchy -->
+<div class="mt-8 p-5 rounded-2xl glass-panel border border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-stellar/20 border border-starblue/30 flex items-center justify-center text-starblue flex-shrink-0">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div class="text-xs font-mono text-starblue uppercase" data-ar="آلية التعاون اللامركزي" data-en="DECENTRALIZED COORDINATION">DECENTRALIZED COORDINATION</div>
+<div class="text-xs text-gray-300 font-light" data-ar="لا ننتظر موافقة إدارية للبدء؛ أي مساهم يمكنه تحويل التساؤل إلى فرع برمجي واختبار فوري." data-en="No managerial queue: any member initiates an RFC, forks, isolates an experimental lab, and requests review.">
+          No managerial queue: any member initiates an RFC, forks, isolates an experimental lab, and requests review.
+        </div>
+</div>
+</div>
+<a class="text-xs font-mono text-white hover:text-starblue transition-colors whitespace-nowrap flex items-center gap-1.5 self-end md:self-center" href="https://github.com/HeadLess-Collective" target="_blank">
+<span data-ar="تصفح مناقشات المشاريع" data-en="Explore Open Discussions">Explore Open Discussions</span>
+<span>→</span>
+</a>
+</div>
+</div>
+</section>
+<!-- END: Section 04 - How We Work -->
+<!-- BEGIN: Section 05 - Projects (Cyber Diaries Showcase) -->
+<section class="py-24 px-6 border-t border-white/5 relative bg-gradient-to-b from-obsidian via-cosmic/20 to-obsidian" id="projects">
+<div class="max-w-6xl mx-auto">
+<!-- Section Header -->
+<div class="mb-14">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stellar/15 border border-starblue/25 text-xs font-mono text-starblue tracking-widest uppercase mb-3">
+<span>05 // SELECTED WORK</span>
+</div>
+<h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight" data-ar="مشروع 001 / هيدلس كوليكتف" data-en="HEADLESS COLLECTIVE / PROJECT 001">
+      HEADLESS COLLECTIVE / PROJECT 001
+    </h2>
+<div class="mt-2 text-starblue font-mono text-xs tracking-wider uppercase">
+      FLAGSHIP EDUCATIONAL PLATFORM · ARABIC-FIRST SECURITY LEARNING
+    </div>
+</div>
+<!-- Cyber Diaries Project Showcase Box -->
+<div class="glass-panel rounded-3xl p-8 lg:p-12 border border-starblue/35 shadow-2xl relative overflow-hidden">
+<!-- Decorative Ambient Light -->
+<div class="absolute -right-24 -top-24 w-96 h-96 bg-stellar/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+<!-- Project Info -->
+<div class="lg:col-span-7 space-y-6">
+<div class="flex flex-wrap items-center gap-3">
+<span class="px-3 py-1 rounded-full text-xs font-mono bg-cyan-400/10 text-cyan-300 border border-cyan-400/30">FLAGSHIP REPOSITORY</span>
+<span class="text-xs font-mono text-gray-400 border border-white/10 px-2.5 py-1 rounded-full bg-black/40">OWASP TOP 10:2025 ALIGNED</span>
+</div>
+<div>
+<h3 class="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Cyber Diaries <span class="text-starblue font-arabic">/ يوميات سابر</span>
+</h3>
+<p class="text-sm font-mono text-gray-400 mt-1">Learn · Investigate · Remediate · Document</p>
+</div>
+<p class="text-gray-300 text-sm sm:text-base leading-relaxed font-light" data-ar="منصة تعليمية مبتكرة باللغة العربية لأمن الويب، مبنية على سيناريوهات واقعية وحوارات مصرية لفريق العمل، مع مختبرات ثغرات معزولة بنظام Docker وتدريب شامل على كافة الجوانب الأمنية." data-en="A groundbreaking Arabic-first, scenario-driven web security education platform. Built with narrative immersion featuring Egyptian colloquial team dialogue, dockerized multi-tier vulnerability labs, and end-to-end holistic cybersecurity pedagogy.">
+          A groundbreaking Arabic-first, scenario-driven web security education platform. Built with narrative immersion featuring Egyptian colloquial team dialogue, dockerized multi-tier vulnerability labs, and end-to-end holistic cybersecurity pedagogy.
+        </p>
+<!-- 4-Phase Incident Learning Journey -->
+<div class="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-3">
+<div class="text-[11px] font-mono text-starblue uppercase tracking-wider font-semibold">
+            4-PHASE INCIDENT JOURNEY:
+          </div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono text-xs">
+<div class="p-2.5 rounded-lg bg-stellar/15 border border-starblue/30 text-white">
+<span class="text-starblue block text-[10px]">PHASE 01</span>
+<span class="font-bold">01 LEARN</span>
+</div>
+<div class="p-2.5 rounded-lg bg-stellar/15 border border-starblue/30 text-white">
+<span class="text-starblue block text-[10px]">PHASE 02</span>
+<span class="font-bold">02 INVESTIGATE</span>
+</div>
+<div class="p-2.5 rounded-lg bg-stellar/15 border border-starblue/30 text-white">
+<span class="text-starblue block text-[10px]">PHASE 03</span>
+<span class="font-bold">03 REMEDIATE</span>
+</div>
+<div class="p-2.5 rounded-lg bg-stellar/15 border border-starblue/30 text-white">
+<span class="text-starblue block text-[10px]">PHASE 04</span>
+<span class="font-bold">04 DOCUMENT</span>
+</div>
+</div>
+</div>
+<!-- 4 Scope Highlights -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+<div class="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs">
+<span class="text-starblue font-semibold block mb-0.5" data-ar="3 زوايا أمنية متكاملة" data-en="3 Holistic Angles">3 Holistic Angles</span>
+<span class="text-gray-400" data-ar="الهجوم (Red)، الدفاع (SOC)، وتطوير الكود الآمن." data-en="Offensive (Red), Defensive (Blue), &amp; Secure Dev.">Offensive (Red), Defensive (Blue), &amp; Secure Dev.</span>
+</div>
+<div class="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs">
+<span class="text-starblue font-semibold block mb-0.5" data-ar="مختبرات دوكر معزولة" data-en="Isolated Docker Labs">Isolated Docker Labs</span>
+<span class="text-gray-400" data-ar="بيئات تجريبية حقيقية وقابلة للتكرار بأمان كامل." data-en="Reproducible realistic vulnerable micro-environments.">Reproducible realistic vulnerable micro-environments.</span>
+</div>
+<div class="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs">
+<span class="text-starblue font-semibold block mb-0.5" data-ar="سياق حواري واقعي" data-en="Egyptian Colloquial">Egyptian Colloquial</span>
+<span class="text-gray-400" data-ar="نقاشات واقعية بطابع مصري دارج لتبسيط المفاهيم." data-en="Immersive technical banter between engineers.">Immersive technical banter between engineers.</span>
+</div>
+<div class="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs">
+<span class="text-starblue font-semibold block mb-0.5" data-ar="معايير OWASP 2025" data-en="OWASP Top 10:2025">OWASP Top 10:2025</span>
+<span class="text-gray-400" data-ar="مواكب لأحدث التصنيفات والمخاطر الأمنية الحديثة." data-en="Prepared for current and emerging web risks.">Prepared for current and emerging web risks.</span>
+</div>
+</div>
+<!-- Tech Stack Tags -->
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-[11px] font-mono px-2.5 py-1 rounded bg-black/50 text-gray-300 border border-white/10">React</span>
+<span class="text-[11px] font-mono px-2.5 py-1 rounded bg-black/50 text-gray-300 border border-white/10">Next.js</span>
+<span class="text-[11px] font-mono px-2.5 py-1 rounded bg-black/50 text-gray-300 border border-white/10">ASP.NET Core</span>
+<span class="text-[11px] font-mono px-2.5 py-1 rounded bg-black/50 text-gray-300 border border-white/10">PostgreSQL</span>
+<span class="text-[11px] font-mono px-2.5 py-1 rounded bg-black/50 text-gray-300 border border-white/10">Docker Labs</span>
+</div>
+<!-- Action Link Buttons -->
+<div class="flex flex-wrap items-center gap-4 pt-3">
+<a class="btn-sweep px-6 py-3 rounded-full bg-stellar text-white font-medium text-xs font-mono tracking-wider flex items-center gap-2 hover:bg-stellar/90 shadow-glow-stellar transition-all" href="https://github.com/HeadLess-Collective/Cyber-Diaries" rel="noopener noreferrer" target="_blank">
+<span>VIEW REPOSITORY ON GITHUB</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a class="px-6 py-3 rounded-full border border-white/20 text-cream font-medium text-xs font-mono hover:bg-white/5 transition-all" href="https://github.com/HeadLess-Collective" rel="noopener noreferrer" target="_blank">
+            ORGANIZATION PROFILE
+          </a>
+</div>
+</div>
+<!-- Interactive 3-Perspective Operational Inspector -->
+<div class="lg:col-span-5 space-y-4">
+<div class="p-6 rounded-2xl bg-black/70 border border-starblue/35 backdrop-blur-md shadow-2xl">
+<div class="text-xs font-mono text-starblue uppercase tracking-wider mb-4 flex items-center justify-between">
+<span class="flex items-center gap-2 text-white font-semibold">
+<span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              OPERATIONAL PERSPECTIVES
+            </span>
+<span class="text-gray-400 text-[11px]">TRIAD MODEL</span>
+</div>
+<!-- Perspective Selection Tabs -->
+<div class="grid grid-cols-3 gap-1 bg-white/5 p-1 rounded-xl mb-4 border border-white/10">
+<button class="py-2 text-xs font-mono rounded-lg transition-all bg-stellar text-white font-semibold shadow" id="btn-persp-red" onclick="setPerspective('red')">Red Team</button>
+<button class="py-2 text-xs font-mono rounded-lg transition-all text-gray-400 hover:text-white" id="btn-persp-blue" onclick="setPerspective('blue')">Blue / SOC</button>
+<button class="py-2 text-xs font-mono rounded-lg transition-all text-gray-400 hover:text-white" id="btn-persp-dev" onclick="setPerspective('dev')">Developer</button>
+</div>
+<!-- Perspective Dynamic Display -->
+<div class="space-y-4" id="perspCard">
+<div class="flex items-center justify-between">
+<span class="text-xs font-mono px-2.5 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30 font-semibold" id="perspTag">ATTACK VECTOR</span>
+<span class="text-xs font-mono text-gray-400">STATUS: SIMULATING</span>
+</div>
+<div class="text-white text-base font-bold" id="perspRole">The Offensive Infiltration</div>
+<p class="text-xs text-gray-300 font-light leading-relaxed" id="perspDesc">
+              Understand flaw triggers, payload craftsmanship, chained exploits, and how malicious actors bypass input filters.
+            </p>
+<div class="p-3.5 rounded-xl bg-black/60 border border-white/10 font-mono text-xs text-gray-300 space-y-1.5">
+<div>// OBJECTIVE: <span class="text-white font-semibold" id="perspObj">Gain unauthorized telemetry &amp; pivot</span></div>
+<div>// METHOD: <span class="text-starblue font-semibold" id="perspMethod">Blind SQLi, SSRF, Broken Object Auth</span></div>
+</div>
+</div>
+<!-- Incident Lifecycle Live Visualization Meter -->
+<div class="mt-6 pt-4 border-t border-white/10">
+<div class="text-[11px] font-mono text-gray-400 mb-2 flex justify-between">
+<span>INCIDENT LIFECYCLE MONITOR:</span>
+<span class="text-emerald-400 font-semibold">CONTAINED</span>
+</div>
+<div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-red-500 via-stellar to-emerald-400 h-full w-full transition-all duration-300" id="perspProgressMeter"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section 05 - Projects -->
+<!-- BEGIN: Section 06 - Participate -->
+<section class="py-24 px-6 relative bg-obsidian" id="participate">
+<div class="max-w-6xl mx-auto">
+<!-- Section Header -->
+<div class="mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stellar/15 border border-starblue/25 text-xs font-mono text-starblue tracking-widest uppercase mb-3">
+<span>06 // PARTICIPATION</span>
+</div>
+<h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight" data-ar="لكل شخص ما يضيفه." data-en="Everyone has something to contribute.">
+      Everyone has something to contribute.
+    </h2>
+<p class="text-gray-400 mt-2 font-light text-base" data-ar="لست بحاجة إلى إذن رسمي أو منصب لتبدأ في البناء والتعاون مع هيدلس كوليكتف. نرحب بكل عقل شغوف." data-en="You do not need formal permissions or titles to initiate or build with Headless Collective. Curiosity and willingness precede pedigree.">
+      You do not need formal permissions or titles to initiate or build with Headless Collective. Curiosity and willingness precede pedigree.
+    </p>
+</div>
+<!-- 7 Contribution Pathways Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+<!-- Pathway 1 -->
+<div class="glass-panel p-5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group">
+<div class="text-starblue font-mono text-xs mb-1 font-semibold">TRACK 01</div>
+<h3 class="text-base font-bold text-white mb-1.5" data-ar="هندسة البرمجيات" data-en="Software Engineering">Software Engineering</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed" data-ar="ساهم في الأكواد البرمجية، واجهات المستخدم، الأنظمة الخلفية، أو مختبرات دوكر." data-en="Contribute to core repos, frontend UI, backend systems, or Docker labs.">
+        Contribute to core repos, frontend UI, backend systems, or Docker labs.
+      </p>
+</div>
+<!-- Pathway 2 -->
+<div class="glass-panel p-5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group">
+<div class="text-starblue font-mono text-xs mb-1 font-semibold">TRACK 02</div>
+<h3 class="text-base font-bold text-white mb-1.5" data-ar="الأبحاث الأمنية" data-en="Security Research">Security Research</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed" data-ar="حلل الثغرات الأمنية، صمم سيناريوهات المختبرات، واختبر حلول المعالجة البرمجية." data-en="Dissect CVEs, craft lab scenarios, verify remediation recipes, and write audits.">
+        Dissect CVEs, craft lab scenarios, verify remediation recipes, and write audits.
+      </p>
+</div>
+<!-- Pathway 3 -->
+<div class="glass-panel p-5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group">
+<div class="text-starblue font-mono text-xs mb-1 font-semibold">TRACK 03</div>
+<h3 class="text-base font-bold text-white mb-1.5" data-ar="التصميم وتجربة المستخدم" data-en="UI / UX &amp; Design">UI / UX &amp; Design</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed" data-ar="طوّر الهوية البصرية، المخططات التوضيحية، وتجارب المستخدم الاستثنائية." data-en="Elevate visual languages, schematic diagrams, and user-centric architectures.">
+        Elevate visual languages, schematic diagrams, and user-centric architectures.
+      </p>
+</div>
+<!-- Pathway 4 -->
+<div class="glass-panel p-5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group">
+<div class="text-starblue font-mono text-xs mb-1 font-semibold">TRACK 04</div>
+<h3 class="text-base font-bold text-white mb-1.5" data-ar="الاختبار وضمان الجودة" data-en="Testing &amp; QA">Testing &amp; QA</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed" data-ar="اكتشف الحالات الشاذة، وتحقق من بيئات العمل المعزولة ومطابقتها للمعايير." data-en="Break edge cases, validate reproducible environments, and verify security bounds.">
+        Break edge cases, validate reproducible environments, and verify security bounds.
+      </p>
+</div>
+<!-- Pathway 5 -->
+<div class="glass-panel p-5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group">
+<div class="text-starblue font-mono text-xs mb-1 font-semibold">TRACK 05</div>
+<h3 class="text-base font-bold text-white mb-1.5" data-ar="التوثيق والترجمة" data-en="Technical Documentation">Technical Documentation</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed" data-ar="صِغ الأدلة التقنية بالعربية والإنجليزية، وبسّط المفاهيم المعقدة للمتعلمين." data-en="Refine bilingual knowledge bases, explain security patterns, translate guides.">
+        Refine bilingual knowledge bases, explain security patterns, translate guides.
+      </p>
+</div>
+<!-- Pathway 6 -->
+<div class="glass-panel p-5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all group">
+<div class="text-starblue font-mono text-xs mb-1 font-semibold">TRACK 06</div>
+<h3 class="text-base font-bold text-white mb-1.5" data-ar="تنسيق المشاريع" data-en="Project Coordination">Project Coordination</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed" data-ar="نظم التذاكر، نسّق مراجعات الكود، وتواصل مع المساهمين لتسهيل مهامهم." data-en="Organize issues, clarify pull requests, triage bug reports, and connect contributors.">
+        Organize issues, clarify pull requests, triage bug reports, and connect contributors.
+      </p>
+</div>
+<!-- Pathway 7 -->
+<div class="glass-panel p-5 rounded-xl border border-white/10 hover:border-starblue/50 transition-all lg:col-span-2 group">
+<div class="text-starblue font-mono text-xs mb-1 font-semibold">TRACK 07</div>
+<h3 class="text-base font-bold text-white mb-1.5" data-ar="مشاركة المعرفة والإرشاد" data-en="Knowledge Sharing &amp; Mentorship">Knowledge Sharing &amp; Mentorship</h3>
+<p class="text-xs text-gray-400 font-light leading-relaxed" data-ar="قدّم جلسات معرفية، وأرشد المنضمين الجدد، وانشر ثقافة البرمجيات الحرة والتعاونية في مجتمعك التقني." data-en="Conduct peer discussions, mentor newcomers, write deep-dive technical articles, and spread free software culture across communities.">
+        Conduct peer discussions, mentor newcomers, write deep-dive technical articles, and spread free software culture across communities.
+      </p>
+</div>
+</div>
+<!-- Action Box -->
+<div class="glass-panel rounded-3xl p-8 sm:p-12 border border-starblue/30 text-center max-w-3xl mx-auto space-y-4 shadow-glow-stellar">
+<h3 class="text-2xl sm:text-3xl font-bold text-white" data-ar="مستعد للانطلاق دون قيود؟" data-en="Ready to explore without walls?">Ready to explore without walls?</h3>
+<p class="text-sm text-gray-300 font-light max-w-lg mx-auto" data-ar="تصفح المهام المفتوحة، أرسل مساهمتك البرمجية، أو ابدأ نقاشاً تقنياً عبر جيت هاب." data-en="Explore open issues, submit pull requests, or start an architectural discussion on our GitHub.">
+      Explore open issues, submit pull requests, or start an architectural discussion on our GitHub.
+    </p>
+<div class="pt-2">
+<a class="btn-sweep inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-stellar text-white font-medium text-xs font-mono tracking-wider shadow-glow-stellar hover:bg-stellar/90 transition-all" href="https://github.com/HeadLess-Collective" rel="noopener noreferrer" target="_blank">
+<span>GET INVOLVED ON GITHUB</span>
+<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill-rule="evenodd"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Section 06 - Participate -->
+<!-- BEGIN: Vision Section -->
+<section class="py-24 px-6 border-t border-white/5 relative bg-gradient-to-b from-obsidian via-void to-black text-center overflow-hidden">
+<div class="max-w-4xl mx-auto space-y-8 relative z-10">
+<!-- Logo Emblem Centerpiece -->
+<div class="w-20 h-20 rounded-full mx-auto p-1 border border-starblue/40 shadow-glow-stellar bg-black/60 flex items-center justify-center">
+<img alt="Headless Collective Official Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDWil8fsfhhYsGJGsa6U1KHmS2U-oInPGf_zCqj6gLamIPrkPIz9k4qcgk459QymYPu2tgPNzsD16fBB-qjs9QtGAdWzB8rfOLuR4auIYwpXHimA9juN7laLi3-1-JFsZjm6hz24bRYTPfY_pH5wJTG1Y0Gj5O5y58locFXxoJJOYka-tCeLKlNvUqpmDoi8u5OFHKCtqKeBUh6XbSsofAUqjR3shWHzhJooNRms7YAtW5rk77hCg"/>
+</div>
+<div class="space-y-3">
+<span class="text-xs font-mono text-starblue uppercase tracking-widest" data-ar="نحو المستقبل" data-en="LOOKING FORWARD">LOOKING FORWARD</span>
+<h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight" data-ar="البناء أبعد من حدود الفرد." data-en="Building beyond individual minds.">
+      Building beyond individual minds.
+    </h2>
+</div>
+<p class="text-base sm:text-xl text-gray-300 font-light leading-relaxed max-w-2xl mx-auto" data-ar="تتطور البرمجيات بوتيرة متسارعة، لكن التواصل الإنساني وحرية المعرفة هما بوصلتنا الثابتة. نتطلع لبيئة تقنية تعود فيها الأدوات لمن يصنعها ويستخدمها، وتنتقل فيها المعرفة دون قيود." data-en="Software is evolving rapidly, but human connection and open access remain our constant compass. We envision an ecosystem where tools belong to those who build and use them, and knowledge travels without tariffs.">
+    Software is evolving rapidly, but human connection and open access remain our constant compass. We envision an ecosystem where tools belong to those who build and use them, and knowledge travels without tariffs.
+  </p>
+<div class="pt-4">
+<p class="text-lg sm:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cream via-starblue to-white" data-ar="“لا يملك المستقبل عقل واحد. نحن نبنيه معاً.”" data-en="“No single mind owns the future. We build it together.”">
+      “No single mind owns the future. We build it together.”
+    </p>
+</div>
+</div>
+</section>
+<!-- END: Vision Section -->
+<!-- BEGIN: Footer -->
+<footer class="py-14 px-6 border-t border-white/10 bg-black text-gray-400 text-xs font-light">
+<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+<!-- Brand & Manifesto Summary -->
+<div class="md:col-span-5 space-y-4">
+<div class="flex items-center gap-3">
+<img alt="Logo" class="w-8 h-8 rounded-full border border-starblue/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDWil8fsfhhYsGJGsa6U1KHmS2U-oInPGf_zCqj6gLamIPrkPIz9k4qcgk459QymYPu2tgPNzsD16fBB-qjs9QtGAdWzB8rfOLuR4auIYwpXHimA9juN7laLi3-1-JFsZjm6hz24bRYTPfY_pH5wJTG1Y0Gj5O5y58locFXxoJJOYka-tCeLKlNvUqpmDoi8u5OFHKCtqKeBUh6XbSsofAUqjR3shWHzhJooNRms7YAtW5rk77hCg"/>
+<span class="text-white font-bold tracking-wider text-sm font-mono">HEADLESS COLLECTIVE</span>
+</div>
+<p class="text-gray-400 text-xs leading-relaxed max-w-sm" data-ar="تجمع تقني مستقل ولامركزي مكرس للبرمجيات الحرة، وتعليم الأمن السيبراني الشفاف، وحرية الاستكشاف الفكري." data-en="An independent, decentralized tech collective dedicated to open source, transparent security education, and unrestricted intellectual curiosity.">
+      An independent, decentralized tech collective dedicated to open source, transparent security education, and unrestricted intellectual curiosity.
+    </p>
+<div class="text-[11px] font-mono text-gray-500">
+      HEADLESS · INDEPENDENT · OPEN · COLLABORATIVE
+    </div>
+</div>
+<!-- Quick Navigation -->
+<div class="md:col-span-3 space-y-2">
+<div class="text-white font-mono text-xs uppercase tracking-wider mb-2" data-ar="التنقل" data-en="Navigation">Navigation</div>
+<ul class="space-y-1.5 text-xs font-mono">
+<li><a class="hover:text-starblue transition-colors" data-ar="الفلسفة" data-en="Philosophy" href="#philosophy">01 Philosophy</a></li>
+<li><a class="hover:text-starblue transition-colors" data-ar="المبادئ" data-en="Principles" href="#principles">02 Principles</a></li>
+<li><a class="hover:text-starblue transition-colors" data-ar="مجالات الاستكشاف" data-en="Fields of Work" href="#fields">03 Fields of Work</a></li>
+<li><a class="hover:text-starblue transition-colors" data-ar="آلية العمل" data-en="Work Methodology" href="#how-we-work">04 Work Methodology</a></li>
+<li><a class="hover:text-starblue transition-colors" data-ar="المشاريع والمختبرات" data-en="Projects &amp; Labs" href="#projects">05 Projects &amp; Labs</a></li>
+<li><a class="hover:text-starblue transition-colors" data-ar="كيفية المشاركة" data-en="How to Participate" href="#participate">06 How to Participate</a></li>
+</ul>
+</div>
+<!-- Repositories & External -->
+<div class="md:col-span-4 space-y-2">
+<div class="text-white font-mono text-xs uppercase tracking-wider mb-2" data-ar="المستودعات" data-en="Repositories">Repositories</div>
+<ul class="space-y-1.5 text-xs font-mono">
+<li>
+<a class="hover:text-starblue flex items-center justify-between border-b border-white/5 pb-1" href="https://github.com/HeadLess-Collective/Cyber-Diaries" rel="noopener noreferrer" target="_blank">
+<span>Cyber Diaries / يوميات سابر</span>
+<span class="text-gray-500">v1.0</span>
+</a>
+</li>
+<li>
+<a class="hover:text-starblue flex items-center justify-between border-b border-white/5 pb-1" href="https://github.com/HeadLess-Collective" rel="noopener noreferrer" target="_blank">
+<span>GitHub Organization Profile</span>
+<span class="text-gray-500">Public</span>
+</a>
+</li>
+<li>
+<a class="hover:text-starblue flex items-center justify-between border-b border-white/5 pb-1" href="#participate">
+<span>Open Participation RFCs</span>
+<span class="text-gray-500">Active</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+<!-- Copyright Bar -->
+<div class="max-w-6xl mx-auto mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500 font-mono gap-4">
+<div>
+    © 2025 HEADLESS COLLECTIVE. OPEN KNOWLEDGE &amp; CODE.
+  </div>
+<div>
+    DESIGNED FOR OPEN MINDS ACROSS THE GLOBE.
+  </div>
+</div>
+</footer>
+<!-- END: Footer -->
+<!-- BEGIN: Interactive Scripts -->
+<script data-purpose="fields-inspector">
+  // Constellation 6 Fields Data Store
+  const fieldData = [
+    {
+      code: "NODE 01 // CORE UTILITY",
+      title: "Software & Development Tools",
+      desc: "Engineering pragmatic, developer-first tools, modular micro-frameworks, and intuitive CLI solutions that streamline workflows and dismantle vendor entrapment.",
+      focus1: "Modular Architecture & Microservices",
+      focus2: "TypeScript, Go, Rust, ASP.NET Core",
+      focus3: "Open Source Utilities & Libraries",
+      status: "ACTIVE DEVELOPMENT"
+    },
+    {
+      code: "NODE 02 // DEFENSIVE & OFFENSIVE",
+      title: "Security & Privacy",
+      desc: "Investigating defensive architectures, vulnerability patterns, encryption paradigms, and hands-on offensive simulations to empower robust systems.",
+      focus1: "AppSec & Vulnerability Triaging",
+      focus2: "Docker Labs, Burp, OWASP 2025",
+      focus3: "Cyber Diaries & Audit Playbooks",
+      status: "FLAGSHIP WORKSTREAM"
+    },
+    {
+      code: "NODE 03 // RESILIENT BACKBONE",
+      title: "Systems & Infrastructure",
+      desc: "Constructing reliable, decentralized, lightweight self-hosted primitives, cloud-native deployments, and container architectures that maintain uptime without bloated overhead.",
+      focus1: "Containerization & Orchestration",
+      focus2: "Docker, Kubernetes, Linux Kernels",
+      focus3: "Zero-Trust Infrastructure Blueprints",
+      status: "ONGOING RESEARCH"
+    },
+    {
+      code: "NODE 04 // FRONTIER COGNITION",
+      title: "AI & Emerging Technology",
+      desc: "Evaluating local open-weights LLMs, autonomous security analyzers, transparent algorithms, and algorithmic integrity without corporate capture.",
+      focus1: "Local LLM Tooling & Agents",
+      focus2: "Python, PyTorch, Ollama, ONNX",
+      focus3: "AI Assisted Security Code Reviewers",
+      status: "PROTOTYPING"
+    },
+    {
+      code: "NODE 05 // OPEN KNOWLEDGE",
+      title: "Documentation & Education",
+      desc: "Crafting Arabic-first technical documentation, readable guides, and multi-perspective tutorials that demystify high-level concepts for aspiring engineers.",
+      focus1: "Bilingual Technical Writing",
+      focus2: "Interactive Scenario Design",
+      focus3: "Egyptian Dialect Storylines",
+      status: "COMMUNITY LED"
+    },
+    {
+      code: "NODE 06 // HUMAN INTERFACE",
+      title: "Design & User Experience",
+      desc: "Creating visually compelling, high-contrast, distraction-free interfaces that treat the user's attention with dignity and clarity.",
+      focus1: "Dark-Mode Ergonomics & Accessibility",
+      focus2: "Tailwind CSS, Figma, Web Standards",
+      focus3: "Design Tokens & Clean Micro-Interactions",
+      status: "CONTINUOUS POLISH"
+    }
+  ];
+
+  function selectField(index) {
+    for (let i = 0; i < 6; i++) {
+      const btn = document.getElementById(`field-tab-${i}`);
+      const indicator = btn.querySelector('span:first-child');
+      const label = btn.querySelector('span:nth-child(2)');
+      if (i === index) {
+        btn.className = "field-btn p-4 rounded-xl text-left border border-starblue/50 bg-stellar/25 text-white transition-all text-xs font-mono relative group focus:outline-none focus:ring-1 focus:ring-starblue";
+        indicator.className = "inline-block w-2 h-2 rounded-full bg-cyan-400 mb-2 group-hover:scale-125 transition-transform";
+        label.className = "block text-starblue text-[11px] mb-1 font-semibold";
+      } else {
+        btn.className = "field-btn p-4 rounded-xl text-left border border-white/10 bg-white/5 text-gray-300 hover:border-starblue/30 transition-all text-xs font-mono relative group focus:outline-none focus:ring-1 focus:ring-starblue";
+        indicator.className = "inline-block w-2 h-2 rounded-full bg-gray-500 mb-2 group-hover:scale-125 transition-transform";
+        label.className = "block text-gray-400 text-[11px] mb-1 font-semibold";
+      }
+    }
+
+    const panel = document.getElementById('fieldDetailsPanel');
+    panel.style.opacity = '0.4';
+    panel.style.transform = 'translateY(4px)';
+
+    setTimeout(() => {
+      const data = fieldData[index];
+      document.getElementById('fieldCode').innerText = data.code;
+      document.getElementById('fieldTitle').innerText = data.title;
+      document.getElementById('fieldDescription').innerText = data.desc;
+      document.getElementById('fieldFocus1').innerText = data.focus1;
+      document.getElementById('fieldFocus2').innerText = data.focus2;
+      document.getElementById('fieldFocus3').innerText = data.focus3;
+      document.getElementById('fieldStatus').innerText = data.status;
+
+      panel.style.opacity = '1';
+      panel.style.transform = 'translateY(0)';
+    }, 120);
+  }
+</script>
+<script data-purpose="stage-inspector">
+  function showStageDetails(stageIndex) {
+    // Interactive visual feedback for stage clicks
+    const stages = document.querySelectorAll('#how-we-work .glass-panel.cursor-pointer');
+    stages.forEach((st, idx) => {
+      if (idx === stageIndex) {
+        st.classList.add('border-starblue', 'bg-stellar/20');
+      } else {
+        st.classList.remove('border-starblue', 'bg-stellar/20');
+      }
+    });
+  }
+</script>
+<script data-purpose="perspective-inspector">
+  // Data store for Cyber Diaries 3 Perspectives
+  const perspectiveData = {
+    red: {
+      tag: "ATTACK VECTOR",
+      tagClass: "text-xs font-mono px-2.5 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30 font-semibold",
+      role: "The Offensive Infiltration",
+      desc: "Understand flaw triggers, payload craftsmanship, chained exploits, and how malicious actors bypass input filters.",
+      obj: "Gain unauthorized telemetry & pivot",
+      method: "Blind SQLi, SSRF, Broken Object Auth",
+      progressWidth: "35%",
+      progressGradient: "from-red-500 to-rose-600"
+    },
+    blue: {
+      tag: "DEFENSIVE TRIAGE",
+      tagClass: "text-xs font-mono px-2.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold",
+      role: "The SOC & Threat Hunter",
+      desc: "Inspect telemetry anomaly logs, monitor packet streams, extract IoCs, and establish rapid incident containment in sandbox environments.",
+      obj: "Detect intrusions in sub-minute latencies",
+      method: "Log Parsing, SIEM Rules, Docker Isolation",
+      progressWidth: "70%",
+      progressGradient: "from-blue-500 to-stellar"
+    },
+    dev: {
+      tag: "SECURE CODE & REMEDIATION",
+      tagClass: "text-xs font-mono px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold",
+      role: "The Software Engineer",
+      desc: "Patch vulnerable controllers, enforce strict parameterized queries, configure safe headers, and write preventative unit tests in CI.",
+      obj: "Eradicate flaw pattern at codebase level",
+      method: "Parameterized Queries, AST Checks, CI Audits",
+      progressWidth: "100%",
+      progressGradient: "from-emerald-500 to-teal-400"
+    }
+  };
+
+  function setPerspective(type) {
+    ['red', 'blue', 'dev'].forEach(k => {
+      const btn = document.getElementById(`btn-persp-${k}`);
+      if (k === type) {
+        btn.className = "py-2 text-xs font-mono rounded-lg transition-all bg-stellar text-white font-semibold shadow";
+      } else {
+        btn.className = "py-2 text-xs font-mono rounded-lg transition-all text-gray-400 hover:text-white";
+      }
+    });
+
+    const d = perspectiveData[type];
+    const tagEl = document.getElementById('perspTag');
+    tagEl.className = d.tagClass;
+    tagEl.innerText = d.tag;
+    document.getElementById('perspRole').innerText = d.role;
+    document.getElementById('perspDesc').innerText = d.desc;
+    document.getElementById('perspObj').innerText = d.obj;
+    document.getElementById('perspMethod').innerText = d.method;
+
+    const meter = document.getElementById('perspProgressMeter');
+    meter.style.width = d.progressWidth;
+  }
+</script>
+<script data-purpose="scroll-progress-and-language">
+  // Scroll progress meter
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    const bar = document.getElementById('scrollProgressBar');
+    if (bar) bar.style.width = scrolled + '%';
+  });
+
+  // Language Switcher Functionality
+  let currentLang = 'en';
+
+  function toggleLanguage() {
+    currentLang = currentLang === 'en' ? 'ar' : 'en';
+    const isArabic = currentLang === 'ar';
+
+    document.documentElement.setAttribute('dir', isArabic ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', isArabic ? 'ar' : 'en');
+
+    document.getElementById('langIndicator').innerText = isArabic ? 'EN' : 'AR';
+
+    const elements = document.querySelectorAll('[data-en][data-ar]');
+    elements.forEach(el => {
+      el.innerText = isArabic ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    });
+  }
+</script>
+<!-- END: Interactive Scripts -->
+</body></html>
