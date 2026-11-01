@@ -1,6 +1,7 @@
 import { content } from '../data/content'
 import { CYBER_DIARIES_REPO, GITHUB_ORG } from '../data/site'
 import { useLanguage } from '../i18n/LanguageContext'
+import { getAssetUrl } from '../utils/assetPath'
 
 const FOOTER_NAV = [
   { index: '01', href: '#philosophy', label: content.nav.philosophy },
@@ -24,7 +25,7 @@ export function SiteFooter() {
               alt="Headless Collective logo"
               className="w-8 h-8 rounded-full border border-starblue/30"
               height={128}
-              src="/assets/emblem-128.jpg"
+              src={getAssetUrl('/assets/emblem-128.jpg')}
               width={128}
             />
             <span className="text-white font-bold tracking-wider text-sm font-mono">

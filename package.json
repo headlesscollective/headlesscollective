@@ -7,10 +7,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:root": "vite build --base=/",
     "preview": "vite preview",
+    "preview:root": "vite preview --base=/",
     "typecheck": "tsc -b --noEmit",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist --nojekyll"
   },
   "dependencies": {
     "react": "^19.3.1",

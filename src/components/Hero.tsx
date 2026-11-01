@@ -2,6 +2,15 @@ import { content } from '../data/content'
 import { useLanguage } from '../i18n/LanguageContext'
 import { ArrowDownIcon } from './ui/Icon'
 
+// Bundled through Vite: hashed, optimised and emitted under the deployment
+// base automatically — no runtime base resolution needed.
+import heroBackdrop640Webp from '@/assets/images/hero-backdrop-640.webp'
+import heroBackdrop1024Webp from '@/assets/images/hero-backdrop-1024.webp'
+import heroBackdrop1376Webp from '@/assets/images/hero-backdrop-1376.webp'
+import heroBackdrop640Jpg from '@/assets/images/hero-backdrop-640.jpg'
+import heroBackdrop1024Jpg from '@/assets/images/hero-backdrop-1024.jpg'
+import heroBackdrop1376Jpg from '@/assets/images/hero-backdrop-1376.jpg'
+
 const QUESTIONS = [
   { href: '#philosophy', ...content.hero.q1 },
   { href: '#principles', ...content.hero.q2 },
@@ -21,19 +30,19 @@ export function Hero() {
         <picture>
           <source
             sizes="100vw"
-            srcSet="/assets/hero-backdrop-640.webp 640w, /assets/hero-backdrop-1024.webp 1024w, /assets/hero-backdrop-1376.webp 1376w"
+            srcSet={`${heroBackdrop640Webp} 640w, ${heroBackdrop1024Webp} 1024w, ${heroBackdrop1376Webp} 1376w`}
             type="image/webp"
           />
           <source
             sizes="100vw"
-            srcSet="/assets/hero-backdrop-640.jpg 640w, /assets/hero-backdrop-1024.jpg 1024w, /assets/hero-backdrop-1376.jpg 1376w"
+            srcSet={`${heroBackdrop640Jpg} 640w, ${heroBackdrop1024Jpg} 1024w, ${heroBackdrop1376Jpg} 1376w`}
             type="image/jpeg"
           />
           <img
             alt="A constellation of connected stars rising above the curve of the Earth"
             className="w-full h-full object-cover object-bottom opacity-75"
             height={768}
-            src="/assets/hero-backdrop-1376.jpg"
+            src={heroBackdrop1376Jpg}
             width={1376}
           />
         </picture>

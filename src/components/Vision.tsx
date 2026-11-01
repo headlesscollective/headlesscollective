@@ -1,5 +1,6 @@
 import { content } from '../data/content'
 import { useLanguage } from '../i18n/LanguageContext'
+import { getAssetUrl } from '../utils/assetPath'
 
 export function Vision() {
   const { t } = useLanguage()
@@ -10,12 +11,12 @@ export function Vision() {
         {/* Emblem centerpiece */}
         <div className="w-20 h-20 rounded-full mx-auto p-1 border border-starblue/40 shadow-glow-stellar bg-black/60 flex items-center justify-center">
           <picture>
-            <source srcSet="/assets/emblem-512.webp" type="image/webp" />
+            <source srcSet={getAssetUrl('/assets/emblem-512.webp')} type="image/webp" />
             <img
               alt="Headless Collective official logo"
               className="w-full h-full object-contain"
               height={512}
-              src="/assets/emblem-512.jpg"
+              src={getAssetUrl('/assets/emblem-512.jpg')}
               width={512}
             />
           </picture>

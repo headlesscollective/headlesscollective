@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { content } from '../data/content'
 import { GITHUB_ORG } from '../data/site'
 import { useLanguage } from '../i18n/LanguageContext'
+import { getAssetUrl } from '../utils/assetPath'
 import { GithubIcon, MenuIcon } from './ui/Icon'
 
 const NAV_ITEMS = [
@@ -41,7 +42,7 @@ export function SiteNav() {
               className="w-full h-full object-cover rounded-md"
               height={128}
               width={128}
-              src="/assets/emblem-128.jpg"
+              src={getAssetUrl('/assets/emblem-128.jpg')}
             />
           </div>
           <div className="flex flex-row items-center gap-1.5 whitespace-nowrap leading-none">

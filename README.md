@@ -13,11 +13,79 @@ scroll-progress meter.
 
 ```bash
 npm install
-npm run dev        # http://127.0.0.1:5173
-npm run build      # type-check + production bundle into dist/
-npm run preview    # serve the built output
+npm run dev        # http://127.0.0.1:5173            (base: /)
+npm run build      # type-check + production bundle into dist/  (base: /headlesscollective/)
+npm run preview    # serve the built output at http://localhost:4173/headlesscollective/
 npm run typecheck  # tsc only
+npm run deploy     # build + publish dist/ to the gh-pages branch
 ```
+
+---
+
+## Deployment (GitHub Pages)
+
+The site is served from a repository sub-path:
+
+```
+https://headlesscollective.github.io/headlesscollective/
+```
+
+`vite.config.ts` sets `base` from the build mode:
+
+```ts
+const GITHUB_PAGES_BASE = '/headlesscollective/'
+
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? GITHUB_PAGES_BASE : '/',
+  ...
+}))
+```
+
+`npm run dev` runs in development mode and stays at `/`, so local development is
+unaffected. `npm run build` and `npm run preview` run in production mode and use the
+Pages sub-path — `npm run preview` therefore serves the built site at
+`http://localhost:4173/headlesscollective/`, a faithful simulation of production.
+
+| Script | Base | URL |
+| --- | --- | --- |
+| `npm run dev` | `/` | `http://127.0.0.1:5173/` |
+| `npm run build` | `/headlesscollective/` | — |
+| `npm run preview` | `/headlesscollective/` | `http://localhost:4173/headlesscollective/` |
+| `npm run build:root` | `/` | root-hosted build (other hosts) |
+| `npm run preview:root` | `/` | `http://localhost:4173/` |
+
+To target a different repository name, change `GITHUB_PAGES_BASE`, or override per build
+with `vite build --base=/other-path/`.
+
+### Deploying
+
+```bash
+npm run deploy   # npm run build && gh-pages -d dist --nojekyll
+```
+
+`--nojekyll` writes a `.nojekyll` file so GitHub Pages serves the output as plain static
+files. The `gh-pages` branch is created automatically if it does not exist.
+
+> Enable **Settings → Pages → Source: `gh-pages` branch** in the repository once, before
+> the first deploy.
+
+### Why `base` alone was not enough
+
+`base` only rewrites URLs that Vite can see at build time:
+
+| Reference | Rewritten with `base`? |
+| --- | --- |
+| `<link>` / `<meta>` asset attributes in `index.html` | ✅ yes |
+| CSS `url()` pointing into `public/` | ✅ yes |
+| **String literals inside JS/TSX** | ❌ **no** |
+
+A component that hardcoded `src="/assets/emblem-128.jpg"` kept that literal in the
+bundle, so the browser requested `https://headlesscollective.github.io/assets/emblem-128.jpg`
+— the domain root, not the repository path — and 404'd. That was the cause of the broken
+images, and it is why every public asset referenced from a component now goes through
+`getAssetUrl()`.
+
+---
 
 ## Stack
 
@@ -50,9 +118,13 @@ src/
   main.tsx                  Entry point
   i18n/
     LanguageContext.tsx     en/ar provider, dir+lang switching, useLanguage()
+  utils/
+    assetPath.ts            getAssetUrl() — resolves public/ paths against import.meta.env.BASE_URL
   data/
     content.ts              Every bilingual string (en + ar)
     site.ts                 Data-driven content: domains, perspectives
+  assets/
+    images/                 Component-only assets, bundled by Vite (hero backdrop)
   components/
     ScrollProgress.tsx      Fixed gradient scroll-progress bar
     SiteNav.tsx             Fixed glass nav, language switch, mobile sheet
@@ -73,7 +145,7 @@ src/
     index.css               Tailwind import, design tokens, glass system
 
 public/
-  assets/                   Optimised emblem + hero backdrop
+  assets/                   Emblem (also used as favicon + og:image)
   fonts/                    Self-hosted woff2 files
 
 tools/qa/                   Headless-Chrome visual + interaction + perf harness
@@ -81,6 +153,7 @@ tools/qa/                   Headless-Chrome visual + interaction + perf harness
   interact.mjs              Interaction assertions (i18n, inspector, toggles, menu)
   perf.mjs                  Cold-cache LCP / CLS / transfer-size measurement
   preview.mjs               Regenerates docs/preview/ captures and logo close-ups
+  check-base.mjs            Verifies base-prefixed URLs, file existence and filename casing
   build-brand.py            Re-derives the emblem + backdrop derivatives from brand/
 ```
 
@@ -157,6 +230,18 @@ The supplied image replaces it at the design's own `opacity-75` and gradient ove
 Images ship as WebP with JPEG fallbacks via `<picture>`, with `srcset`/`sizes` so mobile
 downloads the 640px variant and desktop the 1376px original.
 
+### Where each asset lives, and why
+
+| Asset | Home | How it is referenced | Why |
+| --- | --- | --- | --- |
+| Emblem (`.jpg`, `.webp`) | `public/assets/` | `getAssetUrl('/assets/emblem-128.jpg')` | Also used as the favicon and `og:image` in `index.html`, which needs a stable, unhashed URL. Components resolve the base at runtime. |
+| Hero backdrop | `src/assets/images/` | `import heroBg from '@/assets/images/hero-backdrop-1376.jpg'` | Used only by `Hero.tsx`, so Vite bundles it: hashed, optimised, and emitted under the deployment base automatically. No helper needed. |
+| Fonts (12 woff2) | `public/fonts/` | CSS `url("/fonts/…")` in `src/styles/fonts.css` | Vite rewrites public URLs in CSS with the base. A stable unhashed path also keeps the `<link rel="preload">` in `index.html` and the `@font-face` URL in sync. |
+
+Rule of thumb: an asset referenced from `index.html` stays in `public/`; an asset used
+only by components moves to `src/assets/` and is imported. A `public/` asset referenced
+from a component **must** go through `getAssetUrl()`.
+
 ## Fonts
 
 Downloaded from Google Fonts and self-hosted. Variable families (Space Grotesk, JetBrains
@@ -171,13 +256,13 @@ Measured on the production build (headless Chrome, cache disabled, 7 runs, local
 
 | Metric | Median |
 | --- | --- |
-| FCP / LCP | 392–416 ms |
-| DOMContentLoaded | 73–113 ms |
+| FCP / LCP | 460 ms |
+| DOMContentLoaded | 121 ms |
 | CLS | 0 |
-| Total transfer | 271 KB |
+| Total transfer | 260 KB |
 
 The LCP element is the hero headline, which is why Space Grotesk is preloaded and the hero
-backdrop is *not* — preloading the 47 KB image measurably delayed the LCP font by ~330 ms.
+backdrop is *not* — preloading the image measurably delayed the LCP font by ~330 ms.
 
 ---
 
@@ -186,12 +271,19 @@ backdrop is *not* — preloading the 47 KB image measurably delayed the LCP font
 `tools/qa/` contains a dependency-free headless-Chrome (CDP) harness:
 
 ```bash
-node tools/qa/shoot.mjs http://127.0.0.1:4173/ .tmp/shots   # full-page captures + layout audit
-node tools/qa/interact.mjs http://127.0.0.1:4173/           # 14 interaction assertions
-node tools/qa/perf.mjs http://127.0.0.1:4173/ 7             # FCP / LCP / CLS / transfer
+node tools/qa/shoot.mjs http://localhost:4173/headlesscollective/ .tmp/shots   # full-page captures + layout audit
+node tools/qa/interact.mjs http://localhost:4173/headlesscollective/           # 14 interaction assertions
+node tools/qa/perf.mjs http://localhost:4173/headlesscollective/ 7             # FCP / LCP / CLS / transfer
+node tools/qa/check-base.mjs /headlesscollective/ dist                         # base + filename-casing audit
 ```
 
 `shoot.mjs` captures full-page screenshots at 1512, 1440, 1280, 768 and 390 px, audits for
 horizontal overflow, broken images, console errors and unloaded fonts, and writes
-`audit.json` plus per-section crops. `interact.mjs` drives every interactive control and
-asserts the resulting DOM state, including the Arabic/RTL pass.
+`audit.json` plus per-section crops. It also records every network response, so a single
+404 from a mis-resolved asset path fails the run. `interact.mjs` drives every interactive
+control and asserts the resulting DOM state, including the Arabic/RTL pass.
+
+`check-base.mjs` is the guard against the sub-path regression: it verifies that no URL in
+the built `index.html`, CSS or JS escapes the configured base, that every referenced file
+exists, and that every filename matches the on-disk name **exactly** — GitHub Pages runs
+Linux, where the filesystem is case-sensitive and `emblem-512.JPG` would 404.

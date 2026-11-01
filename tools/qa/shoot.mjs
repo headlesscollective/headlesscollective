@@ -150,6 +150,7 @@ const AUDIT = `(() => {
     horizontalOverflow: overflow,
     brokenImages: broken,
     imageCount: images.length,
+    imageSrcs: images.map((i) => i.src),
     overflowing: overflowing.slice(0, 12),
     overflowCount: overflowing.length,
     fontsLoaded: document.fonts.status,
@@ -185,6 +186,7 @@ for (const vp of VIEWPORTS) {
   await cdp.send('Page.enable')
   await cdp.send('Runtime.enable')
   await cdp.send('Log.enable')
+  await cdp.send('Network.enable')
   await cdp.send('Emulation.setDeviceMetricsOverride', {
     width: vp.width,
     height: vp.height,
@@ -265,6 +267,19 @@ for (const vp of VIEWPORTS) {
     .filter((e) => e.method === 'Runtime.exceptionThrown')
     .map((e) => e.params?.exceptionDetails?.text)
 
+  // Any HTTP >= 400 (the 404s a wrong deployment base causes) and any
+  // request that failed outright.
+  const httpErrors = cdp.events
+    .filter((e) => e.method === 'Network.responseReceived' && e.params?.response?.status >= 400)
+    .map((e) => `${e.params.response.status} ${e.params.response.url}`)
+  const networkFailures = cdp.events
+    .filter((e) => e.method === 'Network.loadingFailed')
+    .map((e) => `${e.params?.errorText} ${e.params?.type ?? ''}`.trim())
+  const requestedUrls = cdp.events
+    .filter((e) => e.method === 'Network.requestWillBeSent')
+    .map((e) => e.params?.request?.url)
+    .filter(Boolean)
+
   results.push({
     viewport: vp.name,
     size: `${vp.width}x${vp.height}@${vp.dsf}x`,
@@ -274,6 +289,9 @@ for (const vp of VIEWPORTS) {
     consoleErrors,
     consoleApiErrors,
     exceptions,
+    httpErrors,
+    networkFailures,
+    requestedUrls,
   })
 
   await fetch(`http://127.0.0.1:${PORT}/json/close/${target.id}`)
@@ -289,6 +307,10 @@ for (const r of results) {
   console.log(`  overflowElements: ${a.overflowCount}  brokenImages: ${(a.brokenImages || []).length}  fonts: ${a.fontsLoaded}`)
   if (a.overflowCount) console.log('  ', JSON.stringify(a.overflowing, null, 1))
   if ((a.brokenImages || []).length) console.log('  broken:', JSON.stringify(a.brokenImages))
+  const httpErrs = r.httpErrors || []
+  const netErrs = r.networkFailures || []
+  console.log(`  http errors: ${httpErrs.length ? JSON.stringify(httpErrs.slice(0, 8)) : 'none'}`)
+  console.log(`  network failures: ${netErrs.length ? JSON.stringify(netErrs.slice(0, 8)) : 'none'}`)
   const errs = [...(r.consoleErrors || []), ...(r.consoleApiErrors || []), ...(r.exceptions || [])]
   console.log(`  console errors: ${errs.length ? JSON.stringify(errs.slice(0, 5)) : 'none'}`)
   console.log(`  sections:`, JSON.stringify({
